@@ -4,7 +4,7 @@ import { throttle } from "lodash.throttle";
 
 const TIME_KEY = "videoplayer-current-time";
 const iframe = document.querySelector("iframe");
-const player = new Vimeo.Player(iframe);
+const player = new Player(iframe);
 
 const onPlay = function (data) {
   const strigifyData = JSON.stringify(data);
@@ -20,15 +20,7 @@ function resumePlayback() {
   if (paused) {
     player
       .setCurrentTime(paused)
-      //.then(function (seconds) {})
-      //.catch(function (error) {
-        //switch (error.name) {
-         // case "Error":
-          //  break;
-          //default:
-          //  break;
-       // }
-     // });
+     
   }
 }
 resumePlayback();
