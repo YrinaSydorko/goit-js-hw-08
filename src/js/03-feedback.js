@@ -1,38 +1,30 @@
-import "../css/common.css";
-import "../css/03-feedback.css";
 import throttle from "lodash.throttle";
-
-const STORAGE_KEY = "feedback-form-state";
-const refs = {
-  form: document.querySelector(".feedback-form"),
-  textarea: document.querySelector(".feedback-form textarea"),
-  input: document.querySelector("input"),
-};
-const formData = {};
-
-populateTextarea();
-
-refs.form.addEventListener("input", throttle(onTextareaInput, 500));
-
-refs.form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  e.currentTarget.reset();
-  const objData = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  localStorage.removeItem(STORAGE_KEY);
-});
-
-function onTextareaInput(e) {
-  formData[e.target.name] = e.target.value;
-  const stringifiedData = JSON.stringify(formData);
-  localStorage.setItem(STORAGE_KEY, stringifiedData);
-}
-
-function populateTextarea() {
-  const savedMessage = JSON.parse(localStorage.getItem(STORAGE_KEY));
-
-  if (savedMessage === null) {
-       return;
+const form = document.querySelector('.feedback-form');
+function onFormSubmit(event) {
+  event.preventDefault();
+  const formElements = event.currentTarget.elements;
+  const email = formElements.email.value;
+  const message = formElements.message.value;
+  function sendForm() {
+    const formData = {
+      email,
+      message,
+    };
+    console.log(formData);
+    event.currentTarget.reset();
+    localStorage.removeItem('feedback-form-state');
   }
-  refs.textarea.value = savedMessage["message"] || "";
-  refs.input.value = savedMessage["email"] || "";
+  sendForm();
 }
+function onInputFill(event) {
+  formData[event.target.name] = event.target.value;
+  localStorage.setItem('feedback-form-state', JSON.stringify(formData));
+}
+const formData = {};
+const savedInLocal = JSON.parse(localStorage.getItem('feedback-form-state'));
+if (savedInLocal) {
+  form.email.value = savedInLocal.email;
+  form.message.value = savedInLocal.message;
+}
+form.addEventListener('input', throttle(onInputFill, 500));
+form.addEventListener('submit', onFormSubmit);
