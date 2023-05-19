@@ -10,6 +10,11 @@ function onFormSubmit(event) {
       email,
       message,
     };
+
+    if (email === '' || message === '') {
+        alert('Please, fill in all fields of the form!');
+
+    };
     console.log(formData);
     event.currentTarget.reset();
     localStorage.removeItem('feedback-form-state');
