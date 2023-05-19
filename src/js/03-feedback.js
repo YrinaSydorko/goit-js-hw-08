@@ -19,7 +19,7 @@ function onMessageInput() {
 function onFormSubmit(event) {
   event.preventDefault();
   if (email.value === '' || message.value === '') {
-    return alert('Заповніть поля!');
+    return alert('Заповніть будь-ласка, всі поля!');
   }
   console.log({ email: email.value, message: message.value });
   event.currentTarget.reset();
