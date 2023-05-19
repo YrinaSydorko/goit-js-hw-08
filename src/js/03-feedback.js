@@ -1,41 +1,34 @@
-import throttle from "lodash.throttle";
+
+
+
+import throttle from 'lodash.throttle';
+
 const form = document.querySelector('.feedback-form');
-//const formElements = event.currentTarget.elements;
-const email = formElements.email.value;
-const message = formElements.message.value;
-form.addEventListener('input', throttle(onInputFill, 500));
+const email = document.querySelector('.feedback-form input');
+const message = document.querySelector('.feedback-form textarea');
+const LOCALSTORAGE_KEY = 'feedback-form-state';
+populateForm();
+form.addEventListener('input', throttle(onMessageInput, 500));
 form.addEventListener('submit', onFormSubmit);
+
+function onMessageInput() {
+  const objectSave = { email: email.value, message: message.value };
+  localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(objectSave));
+}
 
 function onFormSubmit(event) {
   event.preventDefault();
-  const formElements = event.currentTarget.elements;
-  const email = formElements.email.value;
-  const message = formElements.message.value;
-  function sendForm() {
-    const formData = {
-      email,
-      message,
-    };
-
- //   if (email === '' || message === '') {
- //       alert('Please, fill in all fields of the form!');
-
- //   };
-    console.log(formData);
-    event.currentTarget.reset();
-    localStorage.removeItem('feedback-form-state');
+  if (email.value === '' || message.value === '') {
+    return alert('Заповніть поля!');
   }
-  sendForm();
+  console.log({ email: email.value, message: message.value });
+  event.currentTarget.reset();
+  localStorage.removeItem(LOCALSTORAGE_KEY);
 }
-function onInputFill(event) {
-  formData[event.target.name] = event.target.value;
-  localStorage.setItem('feedback-form-state', JSON.stringify(formData));
+function populateForm() {
+  const savedObject = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY));
+  if (savedObject) {
+    email.value = savedObject.email;
+    message.value = savedObject.message;
+  }
 }
-const formData = {};
-const savedInLocal = JSON.parse(localStorage.getItem('feedback-form-state'));
-if (savedInLocal) {
-  form.email.value = savedInLocal.email;
-  form.message.value = savedInLocal.message;
-}
-//form.addEventListener('input', throttle(onInputFill, 500));
-//form.addEventListener('submit', onFormSubmit);
